@@ -1,0 +1,12 @@
+<Project>
+	<Import Project="common.props" />
+	<PropertyGroup>
+		<PackageIcon>paddleNetSDK.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="" />
+		<None Include="..\..\paddleNetSDK.png" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+</Project>

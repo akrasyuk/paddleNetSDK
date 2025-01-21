@@ -1,0 +1,46 @@
+<Project>
+	<Import Project="version.props" />
+	<PropertyGroup>
+		<!-- Shared Project Properties -->
+		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<NoWarn>1591</NoWarn>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Authors>Alex Krasiuk</Authors>
+		<Description>SDK for Paddle Billing</Description>
+		<Copyright>Copyright © 2025</Copyright>
+		<Product>PaddleNetSDK</Product>
+		<RepositoryType>git</RepositoryType>
+		<Nullable>disable</Nullable>
+		<Platforms>AnyCPU;x64;x86</Platforms>
+
+		<!-- Sourcelink-->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<DebugType>Embedded</DebugType>
+		<EmbedAllSources>true</EmbedAllSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>
+			$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb
+		</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+		<!-- Analyze -->
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<IncludeSymbols>true</IncludeSymbols>
+		<EmbedAllSources>true</EmbedAllSources>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>
