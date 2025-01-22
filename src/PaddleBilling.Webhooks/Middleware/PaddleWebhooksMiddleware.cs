@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Core.API.v1.Resources;
-using PaddleBilling.Core.Converters;
 using System.Text.Json;
-using PaddleBilling.Core.API.v1.Resources.Enums;
-using PaddleBilling.Core.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace PaddleBilling.Webhooks.Middleware;
 
-public class PaddleWebhookMiddleware(RequestDelegate next, PaddleWebhookHandlerRegistry registry)
+public class PaddleWebhookMiddleware(
+    RequestDelegate next,
+    PaddleWebhookConfiguration configuration,
+    ILogger<PaddleWebhookMiddleware> logger)
 {
     public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
     {
@@ -21,38 +23,21 @@ public class PaddleWebhookMiddleware(RequestDelegate next, PaddleWebhookHandlerR
 
         try
         {
-            var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
-            var @event = JsonSerializer.Deserialize<Event<Entity>>(body);
+            var @event = await ExtractEvent(context.Request.Body);
 
-            using var scope = serviceProvider.CreateScope();
-            var scopedProvider = scope.ServiceProvider;
-
-            if (@event != null && registry.TryGetHandler(@event.EventType, out var handlerType))
+            if (@event is not null && configuration.TryGetHandler(@event.EventType, out var handlerInfo))
             {
-                var handler = scopedProvider.GetRequiredService(handlerType);
+                using var scope = serviceProvider.CreateScope();
+                var scopedProvider = scope.ServiceProvider;
 
-                var payloadType = @event.EventType.GetPayloadType();
+                var handler = scopedProvider.GetRequiredService(handlerInfo.HandlerType);
 
-                var genericEventType = typeof(Event<>).MakeGenericType(payloadType);
+                var specificEvent = ExtractSpecificEvent(handlerInfo, @event);
 
-                var specificEvent = Activator.CreateInstance(
-                    genericEventType,
-                    @event.EventId,
-                    @event.EventType,
-                    @event.OccurredAt,
-                    @event.NotificationId,
-                    Convert.ChangeType(@event.Data, payloadType)
-                );
-
-                var method = handlerType.GetMethod("HandleAsync");
-                await (Task)method.Invoke(handler, new[] { specificEvent });
-                context.Response.StatusCode = StatusCodes.Status200OK;
+                await InvokeHandler(handler, handlerInfo.HandleMethod, specificEvent);
             }
-            else
-            {
-                context.Response.StatusCode = StatusCodes.Status200OK;
-                await context.Response.WriteAsync("No handler registered for the event type.");
-            }
+
+            context.Response.StatusCode = StatusCodes.Status200OK;
         }
         catch (Exception ex)
         {
@@ -61,9 +46,59 @@ public class PaddleWebhookMiddleware(RequestDelegate next, PaddleWebhookHandlerR
         }
     }
 
+    private async Task InvokeHandler(object handler, MethodInfo method, object args)
+    {
+        try
+        {
+            await ((Task)method.Invoke(handler, [args]))!;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error invoking handler method.");
+        }
+    }
+
+    private object ExtractSpecificEvent(WebhookHandlerInfo handlerInfo, Event<Entity> @event)
+    {
+        try
+        {
+            var specificEvent = Activator.CreateInstance(
+                handlerInfo.ParameterType,
+                @event.EventId,
+                @event.EventType,
+                @event.OccurredAt,
+                @event.NotificationId,
+                Convert.ChangeType(@event.Data, handlerInfo.GenericType)
+            );
+            return specificEvent;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error extracting specific event from generic event.");
+            return default;
+        }
+    }
+
+    private async Task<Event<Entity>> ExtractEvent(Stream bodyStream)
+    {
+        try
+        {
+            using var reader = new StreamReader(bodyStream);
+            var body = await reader.ReadToEndAsync();
+            var @event = JsonSerializer.Deserialize<Event<Entity>>(body);
+
+            return @event;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error deserializing event from request body.");
+            return default;
+        }
+    }
+
     private bool IsValidRequest(HttpContext context)
     {
-        if(!context.Request.Path.StartsWithSegments(registry.Endpoint))
+        if(!context.Request.Path.StartsWithSegments(configuration.Endpoint))
             return false;
 
         if(context.Request.Method != HttpMethods.Post)

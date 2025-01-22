@@ -6,16 +6,16 @@ namespace PaddleBilling.Webhooks.Extensions;
 
 public static class PaddleWebhookExtensions
 {
-    public static IServiceCollection AddPaddleWebhooks(this IServiceCollection services, Action<PaddleWebhookHandlerRegistry> configure)
+    public static IServiceCollection AddPaddleWebhooks(this IServiceCollection services, Action<PaddleWebhookConfiguration> configure)
     {
-        var registry = new PaddleWebhookHandlerRegistry();
-        configure(registry);
+        var configuration = new PaddleWebhookConfiguration();
+        configure(configuration);
 
-        services.AddSingleton(registry);
+        services.AddSingleton(configuration);
 
-        foreach (var handlerType in registry.GetHandlers())
+        foreach (var handlerInfo in configuration.GetHandlers())
         {
-            services.AddScoped(handlerType);
+            services.AddScoped(handlerInfo.HandlerType);
         }
 
         return services;
@@ -23,7 +23,7 @@ public static class PaddleWebhookExtensions
 
     public static IApplicationBuilder UsePaddleWebhooks(this IApplicationBuilder app)
     {
-        var registry = app.ApplicationServices.GetRequiredService<PaddleWebhookHandlerRegistry>();
+        var registry = app.ApplicationServices.GetRequiredService<PaddleWebhookConfiguration>();
         return app.UseMiddleware<PaddleWebhookMiddleware>(registry);
     }
 }
