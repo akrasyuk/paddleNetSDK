@@ -6,6 +6,7 @@ using PaddleBilling.Core.API.v1.Resources.Customers;
 using PaddleBilling.Core.API.v1.Resources.Enums;
 using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Core.API.v1.Resources.ProductCatalog;
+using PaddleBilling.Core.Helpers;
 
 namespace PaddleBilling.Core.Converters;
 
@@ -16,81 +17,62 @@ public class EventConverter : JsonConverter<Event<Entity>>
         var jsonDoc = JsonDocument.ParseValue(ref reader);
         var root = jsonDoc.RootElement;
 
-        var eventType = Enum.Parse<EventType>(root.GetProperty("EventType").GetString());
-        var eventId = root.GetProperty("EventId").GetString();
-        var occurredAt = root.GetProperty("OccurredAt").GetDateTime();
-        var notificationId = root.GetProperty("NotificationId").GetString();
-        var data = root.GetProperty("Data");
+        var eventType =
+            EnumJsonPropertyNameMapper.GetValueFromJsonPropertyName<EventType>(root.GetProperty("event_type")
+                .GetString());
+        var eventId = root.GetProperty("event_id").GetString();
+        var occurredAt = root.GetProperty("occurred_at").GetDateTime();
+        var notificationId = root.GetProperty("notification_id").GetString();
+        var data = root.GetProperty("data");
 
         var rawData = data.GetRawText();
 
         Entity eventData = eventType switch
         {
-            EventType.AddressCreated => JsonSerializer.Deserialize<Address>(rawData, options),
-            EventType.AddressImported => JsonSerializer.Deserialize<Address>(rawData, options),
-            EventType.AddressUpdated => JsonSerializer.Deserialize<Address>(rawData, options),
-            EventType.AdjustmentCreated => JsonSerializer.Deserialize<Adjustment>(rawData, options),
-            EventType.AdjustmentUpdated => JsonSerializer.Deserialize<Adjustment>(rawData, options),
-            EventType.BusinessCreated => JsonSerializer.Deserialize<Business>(rawData, options),
-            EventType.BusinessImported => JsonSerializer.Deserialize<Business>(rawData, options),
-            EventType.BusinessUpdated => JsonSerializer.Deserialize<Business>(rawData, options),
-            EventType.CustomerCreated => JsonSerializer.Deserialize<Customer>(rawData, options),
-            EventType.CustomerImported => JsonSerializer.Deserialize<Customer>(rawData, options),
-            EventType.CustomerUpdated => JsonSerializer.Deserialize<Customer>(rawData, options),
-            EventType.DiscountCreated => JsonSerializer.Deserialize<Discount>(rawData, options),
-            EventType.DiscountImported => JsonSerializer.Deserialize<Discount>(rawData, options),
-            EventType.DiscountUpdated => JsonSerializer.Deserialize<Discount>(rawData, options),
-            EventType.PayoutCreated => JsonSerializer.Deserialize<Payout>(rawData, options),
-            EventType.PayoutPaid => JsonSerializer.Deserialize<Payout>(rawData, options),
-            EventType.PriceCreated => JsonSerializer.Deserialize<Price>(rawData, options),
-            EventType.PriceImported => JsonSerializer.Deserialize<Price>(rawData, options),
-            EventType.PriceUpdated => JsonSerializer.Deserialize<Price>(rawData, options),
-            EventType.ProductCreated => JsonSerializer.Deserialize<Product>(rawData, options),
-            EventType.ProductImported => JsonSerializer.Deserialize<Product>(rawData, options),
-            EventType.ProductUpdated => JsonSerializer.Deserialize<Product>(rawData, options),
-            EventType.ReportCreated => JsonSerializer.Deserialize<Report>(rawData, options),
-            EventType.ReportUpdated => JsonSerializer.Deserialize<Report>(rawData, options),
-            EventType.SubscriptionActivated => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionCanceled => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionCreated => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionImported => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionPastDue => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionPaused => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionResumed => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionTrialing => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.SubscriptionUpdated => JsonSerializer.Deserialize<Subscription>(rawData, options),
-            EventType.TransactionBilled => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionCanceled => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionCompleted => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionCreated => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionPaid => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionPastDue => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionPaymentFailed => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionReady => JsonSerializer.Deserialize<Transaction>(rawData, options),
-            EventType.TransactionUpdated => JsonSerializer.Deserialize<Transaction>(rawData, options),
+            EventType.AddressCreated or EventType.AddressUpdated or EventType.AddressImported => JsonSerializer
+                .Deserialize<Address>(rawData, options),
+            EventType.AdjustmentCreated or EventType.AdjustmentUpdated => JsonSerializer.Deserialize<Adjustment>(
+                rawData, options),
+            EventType.BusinessCreated or EventType.BusinessImported or EventType.BusinessUpdated => JsonSerializer
+                .Deserialize<Business>(rawData, options),
+            EventType.CustomerCreated or EventType.CustomerImported or EventType.CustomerUpdated => JsonSerializer
+                .Deserialize<Customer>(rawData, options),
+            EventType.DiscountCreated or EventType.DiscountImported or EventType.DiscountUpdated => JsonSerializer
+                .Deserialize<Discount>(rawData, options),
+            EventType.PayoutCreated or EventType.PayoutPaid => JsonSerializer.Deserialize<Payout>(rawData, options),
+            EventType.PriceCreated or EventType.PriceImported or EventType.PriceUpdated => JsonSerializer
+                .Deserialize<Price>(rawData, options),
+            EventType.ProductCreated or EventType.ProductImported or EventType.ProductUpdated => JsonSerializer
+                .Deserialize<Product>(rawData, options),
+            EventType.ReportCreated or EventType.ReportUpdated => JsonSerializer.Deserialize<Report>(rawData, options),
+            EventType.SubscriptionCreated or EventType.SubscriptionUpdated or EventType.SubscriptionActivated
+                or EventType.SubscriptionCanceled or EventType.SubscriptionImported
+                or EventType.SubscriptionPaused or EventType.SubscriptionResumed
+                or EventType.SubscriptionPastDue
+                or EventType.SubscriptionTrialing => JsonSerializer.Deserialize<Subscription>(rawData, options),
+            EventType.TransactionCreated or EventType.TransactionUpdated or EventType.TransactionCompleted
+                or EventType.TransactionCanceled or EventType.TransactionPaid
+                or EventType.TransactionPaymentFailed or EventType.TransactionPastDue
+                or EventType.TransactionReady
+                or EventType.TransactionBilled => JsonSerializer.Deserialize<Transaction>(rawData, options),
             _ => throw new NotSupportedException($"Event type '{eventType}' is not supported.")
         };
 
-        return new Event<Entity>
-        {
-            EventId = eventId,
-            EventType = eventType,
-            OccurredAt = occurredAt,
-            Data = eventData,
-            NotificationId = notificationId
-        };
+        return new Event<Entity>(eventId, eventType, occurredAt, notificationId, eventData);
     }
 
     public override void Write(Utf8JsonWriter writer, Event<Entity> value, JsonSerializerOptions options)
     {
-        writer.WriteStartObject();
-        writer.WriteString("EventId", value.EventId);
-        writer.WriteString("EventType", value.EventType.ToString());
-        writer.WriteString("OccurredAt", value.OccurredAt);
+        //writer.WriteStartObject();
+        //writer.WriteString("event_id", value.EventId);
+        //writer.WriteString("event_type", EnumJsonPropertyNameMapper.GetValueFromJsonPropertyName<>(value.EventType));
+        //writer.WriteString("occurred_at", value.OccurredAt);
 
-        writer.WritePropertyName("Data");
-        JsonSerializer.Serialize(writer, value.Data, value.Data.GetType(), options);
+        //writer.WritePropertyName("data");
+        //JsonSerializer.Serialize(writer, value.Data, value.Data.GetType(), options);
 
-        writer.WriteEndObject();
+        //writer.WriteEndObject();
+
+        throw new NotImplementedException();
     }
 }

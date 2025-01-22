@@ -8,7 +8,9 @@
 	<ItemGroup>
 	  <Folder Include="Http\" />
 	  <Folder Include="Exceptions\" />
+	  <Folder Include="Helpers\" />
 	  <Folder Include="Options\" />
+	  <Folder Include="Webhooks\Controllers\" />
 	</ItemGroup>
 
 	<ItemGroup>

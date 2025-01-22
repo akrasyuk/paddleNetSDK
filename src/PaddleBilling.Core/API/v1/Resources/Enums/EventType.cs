@@ -1,8 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using PaddleBilling.Core.Converters;
 
 namespace PaddleBilling.Core.API.v1.Resources.Enums;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(BidirectionalJsonStringEnumConverter<EventType>))]
 public enum EventType
 {
     [JsonPropertyName("address.created")]
