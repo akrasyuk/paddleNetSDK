@@ -5,13 +5,16 @@ using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Core.API.v1.Resources;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using PaddleBilling.Webhooks.Configuration;
+using PaddleBilling.Webhooks.Services;
 
 namespace PaddleBilling.Webhooks.Middleware;
 
 public class PaddleWebhookMiddleware(
     RequestDelegate next,
     PaddleWebhookConfiguration configuration,
-    ILogger<PaddleWebhookMiddleware> logger)
+    ILogger<PaddleWebhookMiddleware> logger,
+    IPaddleSignatureValidator validator)
 {
     public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
     {
@@ -23,7 +26,7 @@ public class PaddleWebhookMiddleware(
 
         try
         {
-            var @event = await ExtractEvent(context.Request.Body);
+            var @event = await ExtractEvent(context);
 
             if (@event is not null && configuration.TryGetHandler(@event.EventType, out var handlerInfo))
             {
@@ -79,12 +82,23 @@ public class PaddleWebhookMiddleware(
         }
     }
 
-    private async Task<Event<Entity>> ExtractEvent(Stream bodyStream)
+    private async Task<Event<Entity>> ExtractEvent(HttpContext context)
     {
         try
         {
-            using var reader = new StreamReader(bodyStream);
+            using var reader = new StreamReader(context.Request.Body);
             var body = await reader.ReadToEndAsync();
+
+            if (configuration.ValidateSignature)
+            {
+                var signature = context.Request.Headers["Paddle-Signature"];
+                if (!validator.ValidateSignature(signature, body))
+                {
+                    logger.LogWarning("Invalid signature in request.");
+                    return default;
+                }
+            }
+
             var @event = JsonSerializer.Deserialize<Event<Entity>>(body);
 
             return @event;
@@ -106,8 +120,6 @@ public class PaddleWebhookMiddleware(
 
         if (context.Request.ContentLength is null or 0)
             return false;
-
-        //TODO: Introduce Paddle signature verification
 
         return true;
     }

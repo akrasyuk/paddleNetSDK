@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace PaddleBilling.Webhooks;
+namespace PaddleBilling.Webhooks.Configuration;
 
 public class WebhookHandlerInfo(Type handlerType, Type genericType, Type parameterType, MethodInfo handleMethod)
 {

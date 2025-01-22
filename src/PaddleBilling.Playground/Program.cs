@@ -24,6 +24,6 @@ var host = Host.CreateDefaultBuilder(args)
 
 var client = host.Services.GetRequiredService<PaddleClient>();
 
-var prices = await client.GetPricesAsync();
+var notSettings = await client.GetNotificationSettingsAsync();
 
 Console.ReadLine();
