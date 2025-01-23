@@ -1,8 +1,9 @@
 ﻿using PaddleBilling.Core.API.v1.Resources.Enums;
 using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Core.Extensions;
+using PaddleBilling.Webhooks.Interfaces;
 
-namespace PaddleBilling.Webhooks;
+namespace PaddleBilling.Webhooks.Configuration;
 
 public class PaddleWebhookConfiguration
 {
@@ -10,9 +11,21 @@ public class PaddleWebhookConfiguration
 
     public string Endpoint { get; private set; } = "/webhooks";
 
+    public string VerificationKey { get; private set; }
+
+    public bool ValidateSignature => VerificationKey != default;
+
+    public int MaxTimestampAgeInSeconds { get; set; } = 5;
+
     public void SetEndpoint(string endpoint)
     {
         Endpoint = endpoint;
+    }
+
+    public void SetSignatureValidation(string secretKey, int maxTimestampAgeInSeconds = 5)
+    {
+        VerificationKey = secretKey;
+        MaxTimestampAgeInSeconds = maxTimestampAgeInSeconds;
     }
 
     public void AddHandler<THandler>(EventType type)

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using PaddleBilling.Webhooks.Configuration;
 using PaddleBilling.Webhooks.Middleware;
+using PaddleBilling.Webhooks.Services;
 
 namespace PaddleBilling.Webhooks.Extensions;
 
@@ -12,6 +14,7 @@ public static class PaddleWebhookExtensions
         configure(configuration);
 
         services.AddSingleton(configuration);
+        services.AddSingleton<IPaddleSignatureValidator, PaddleSignatureValidator>();
 
         foreach (var handlerInfo in configuration.GetHandlers())
         {

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using PaddleBilling.Core.API.v1.QueryParams.NotificationSettings;
 using PaddleBilling.Core.API.v1.QueryParams.Prices;
 using PaddleBilling.Core.API.v1.QueryParams.Products;
 using PaddleBilling.Core.API.v1.Requests.Prices;
 using PaddleBilling.Core.API.v1.Requests.Products;
 using PaddleBilling.Core.API.v1.Resources;
+using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Core.API.v1.Resources.ProductCatalog;
 using PaddleBilling.Core.Http;
 using PaddleBilling.Core.Options;
@@ -93,6 +95,16 @@ public class PaddleClient(
             ApiKey);
     }
 
+    #endregion
+
+    #region Notification Settings
+
+    private const string NotificationSettingsRoute = "/notification-settings";
+
+    public async Task<PaddleResponseForCollection<NotificationDestination>> GetNotificationSettingsAsync(ListNotificationSettingsQueryParams queryParams = null)
+    {
+        return await GetAsync<PaddleResponseForCollection<NotificationDestination>>(NotificationSettingsRoute, ApiKey);
+    }
     #endregion
 
 }
