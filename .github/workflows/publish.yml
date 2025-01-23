@@ -1,0 +1,54 @@
+name: Pack and Publish Projects
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  pack-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Create output directory
+        run: mkdir -p Output
+
+      - name: Pack specific projects
+        run: |
+          projectPaths=("src/PaddleBilling.Core/PaddleBilling.Core.csproj" "src/PaddleBilling.Webhooks/PaddleBilling.Webhooks.csproj")
+          outputBasePath="Output"
+
+          for projectPath in "${projectPaths[@]}"; do
+            projectName=$(basename $projectPath .csproj)
+            outputPath="$outputBasePath/$projectName"
+            
+            echo "Packing $projectName..."
+            mkdir -p "$outputPath"
+            dotnet pack $projectPath --configuration Release --output "$outputPath"
+            echo "Done packing $projectName!"
+          done
+
+      - name: Publish packages
+        run: |
+          for projectDir in Output/*; do
+            nupkgs=($projectDir/*.nupkg)
+            if [ ${#nupkgs[@]} -gt 0 ]; then
+              for nupkg in "${nupkgs[@]}"; do
+                echo "Publishing $nupkg to NuGet.org..."
+                dotnet nuget push $nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+                echo "Published $nupkg!"
+              done
+            else
+              echo "No packages found in $projectDir"
+            fi
+          done
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

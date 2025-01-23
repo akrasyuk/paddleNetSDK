@@ -3,6 +3,7 @@ $outputBasePath = Join-Path $scriptDirectory "../PublishedApp"
 
 $projectPaths = @(
     "src\PaddleBilling.Core\PaddleBilling.Core.csproj"
+    "src\PaddleBilling.Webhooks\PaddleBilling.Webhooks.csproj"
 )
 
 
