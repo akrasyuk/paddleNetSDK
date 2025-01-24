@@ -18,7 +18,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\PaddleBilling.Models.Json\PaddleBilling.Models.Json.csproj" />
-	  <ProjectReference Include="..\PaddleBilling.Models\PaddleBilling.Models.csproj" />
 	</ItemGroup>
 
 </Project>

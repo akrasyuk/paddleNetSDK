@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\PaddleBilling.Models\PaddleBilling.Models.csproj" />
+	  <ProjectReference Include="..\PaddleBilling.Models.Json\PaddleBilling.Models.Json.csproj" />
 	</ItemGroup>
 
 </Project>

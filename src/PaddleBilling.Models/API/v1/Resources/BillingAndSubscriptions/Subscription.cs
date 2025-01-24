@@ -6,19 +6,19 @@ public class Subscription : Entity
     public List<SubscriptionItem> Items { get; set; }
     public string Status { get; set; }
     public DiscountInfo Discount { get; set; }
-    public DateTime? StartedAt { get; set; }
-    public DateTime? PausedAt { get; set; }
+    public DateTimeOffset? StartedAt { get; set; }
+    public DateTimeOffset? PausedAt { get; set; }
     public string AddressId { get; set; }
     public string BusinessId { get; set; }
     public string CustomerId { get; set; }
     public string TransactionId { get; set; }
-    public DateTime? CanceledAt { get; set; }
+    public DateTimeOffset? CanceledAt { get; set; }
     public BillingCycle BillingCycle { get; set; }
     public string CurrencyCode { get; set; }
-    public DateTime? NextBilledAt { get; set; }
+    public DateTimeOffset? NextBilledAt { get; set; }
     public string CollectionMode { get; set; }
     public BillingDetails BillingDetails { get; set; }
-    public DateTime? FirstBilledAt { get; set; }
+    public DateTimeOffset? FirstBilledAt { get; set; }
     public BillingPeriod CurrentBillingPeriod { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public Dictionary<string, string> CustomData { get; set; }

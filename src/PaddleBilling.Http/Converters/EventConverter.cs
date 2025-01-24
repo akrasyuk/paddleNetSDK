@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using PaddleBilling.Http.Helpers;
 using PaddleBilling.Models.API.v1.Resources;
 using PaddleBilling.Models.API.v1.Resources.BillingAndSubscriptions;
 using PaddleBilling.Models.API.v1.Resources.Customers;
@@ -17,9 +16,8 @@ public class EventConverter : JsonConverter<Event<Entity>>
         var jsonDoc = JsonDocument.ParseValue(ref reader);
         var root = jsonDoc.RootElement;
 
-        var eventType =
-            EnumJsonPropertyNameMapper.GetValueFromJsonPropertyName<EventType>(root.GetProperty("event_type")
-                .GetString());
+        var eventType = root.GetProperty("event_type").Deserialize<EventType>(options);
+
         var eventId = root.GetProperty("event_id").GetString();
         var occurredAt = root.GetProperty("occurred_at").GetDateTime();
         var notificationId = root.GetProperty("notification_id").GetString();

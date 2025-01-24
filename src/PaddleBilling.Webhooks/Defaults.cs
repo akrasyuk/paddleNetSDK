@@ -1,5 +1,4 @@
 ﻿using PaddleBilling.Http.Converters;
-using PaddleBilling.Models.API.v1.Resources.Enums;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using PaddleBilling.Models.Json.Converters;
@@ -16,10 +15,10 @@ public static class Defaults
         Converters =
         {
             new EventTypeConverter(),
-            new ItemTypeConverter(),
-            new TaxCategoryConverter(),
-            new BidirectionalJsonStringEnumConverter<ItemType>(),
-            new BidirectionalJsonStringEnumConverter<TaxCategory>(),
+            new DefaultItemTypeConverter(),
+            new NullableItemTypeConverter(),
+            new NullableTaxCategoryConverter(),
+            new DefaultTaxCategoryConverter(),
             new EventConverter()
         }
     };
