@@ -24,10 +24,9 @@ jobs:
       - name: Pack and publish all eligible projects
         run: |
           projectPaths=(
-            "src/PaddleBilling.Core/PaddleBilling.Core.csproj"
-            "src/PaddleBilling.Webhooks/PaddleBilling.Webhooks.csproj"
             "src/PaddleBilling.Models/PaddleBilling.Models.csproj"
             "src/PaddleBilling.Http/PaddleBilling.Http.csproj"
+            "src/PaddleBilling.Webhooks/PaddleBilling.Webhooks.csproj"
             "src/PaddleBilling.Utils/PaddleBilling.Utils.csproj"
             "src/PaddleBilling.Models.Json/PaddleBilling.Models.Json.csproj"
             "src/PaddleBilling.Models.Json.Aot/PaddleBilling.Models.Json.Aot.csproj"
