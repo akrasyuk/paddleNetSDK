@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\package.props" />
+
+	<PropertyGroup>
+		<Title>Paddle Billing SDK</Title>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PaddleBilling.Models\PaddleBilling.Models.csproj" />
+	</ItemGroup>
+
+</Project>

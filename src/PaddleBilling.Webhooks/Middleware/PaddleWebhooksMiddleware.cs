@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
-using PaddleBilling.Core.API.v1.Resources;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using PaddleBilling.Models.API.v1.Resources;
+using PaddleBilling.Models.API.v1.Resources.NotificationsAndEvents;
+using PaddleBilling.Utils;
 using PaddleBilling.Webhooks.Configuration;
-using PaddleBilling.Webhooks.Services;
 
 namespace PaddleBilling.Webhooks.Middleware;
 
@@ -91,15 +91,19 @@ public class PaddleWebhookMiddleware(
 
             if (configuration.ValidateSignature)
             {
-                var signature = context.Request.Headers["Paddle-Signature"];
-                if (!validator.ValidateSignature(signature, body))
+                var signature = context.Request.Headers["Paddle-Signature"].ToString();
+                if (!validator.ValidateSignature(
+                        signature, 
+                        body,
+                        configuration.VerificationKey,
+                        configuration.MaxTimestampAgeInSeconds))
                 {
                     logger.LogWarning("Invalid signature in request.");
                     return default;
                 }
             }
 
-            var @event = JsonSerializer.Deserialize<Event<Entity>>(body);
+            var @event = JsonSerializer.Deserialize<Event<Entity>>(body, configuration.JsonSerializerOptions);
 
             return @event;
         }

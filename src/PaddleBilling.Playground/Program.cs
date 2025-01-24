@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PaddleBilling.Core.API.v1;
-using PaddleBilling.Core.Extensions;
-using PaddleBilling.Core.Options;
-
+using PaddleBilling.Http.API.v1;
+using PaddleBilling.Http.Extensions;
+using PaddleBilling.Http.Options;
 
 
 var serverUrl = "https://sandbox-api.paddle.com/";
@@ -24,6 +23,6 @@ var host = Host.CreateDefaultBuilder(args)
 
 var client = host.Services.GetRequiredService<PaddleClient>();
 
-var notSettings = await client.GetNotificationSettingsAsync();
+var products = await client.GetProductsAsync();
 
 Console.ReadLine();

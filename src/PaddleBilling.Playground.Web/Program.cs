@@ -1,5 +1,4 @@
-using PaddleBilling.Core.API.v1.Resources.Customers;
-using PaddleBilling.Core.API.v1.Resources.Enums;
+using PaddleBilling.Models.API.v1.Resources.Enums;
 using PaddleBilling.Playground.Web.Handlers;
 using PaddleBilling.Webhooks.Extensions;
 

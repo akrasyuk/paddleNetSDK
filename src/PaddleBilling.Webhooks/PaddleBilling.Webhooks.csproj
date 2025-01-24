@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\PaddleBilling.Core\PaddleBilling.Core.csproj" />
+	<ProjectReference Include="..\PaddleBilling.Http\PaddleBilling.Http.csproj" />
+	<ProjectReference Include="..\PaddleBilling.Models.Json\PaddleBilling.Models.Json.csproj" />
+	<ProjectReference Include="..\PaddleBilling.Utils\PaddleBilling.Utils.csproj" />
   </ItemGroup>
 
 </Project>

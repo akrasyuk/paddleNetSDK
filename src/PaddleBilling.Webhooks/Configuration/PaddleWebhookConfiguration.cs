@@ -1,6 +1,7 @@
-﻿using PaddleBilling.Core.API.v1.Resources.Enums;
-using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
-using PaddleBilling.Core.Extensions;
+﻿using System.Text.Json;
+using PaddleBilling.Http.Extensions;
+using PaddleBilling.Models.API.v1.Resources.Enums;
+using PaddleBilling.Models.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Webhooks.Interfaces;
 
 namespace PaddleBilling.Webhooks.Configuration;
@@ -15,7 +16,9 @@ public class PaddleWebhookConfiguration
 
     public bool ValidateSignature => VerificationKey != default;
 
-    public int MaxTimestampAgeInSeconds { get; set; } = 5;
+    public int MaxTimestampAgeInSeconds { get; private set; } = 5;
+
+    public JsonSerializerOptions JsonSerializerOptions { get; private set; } = Defaults.DefaultJsonSerializerOptions;
 
     public void SetEndpoint(string endpoint)
     {
@@ -26,6 +29,11 @@ public class PaddleWebhookConfiguration
     {
         VerificationKey = secretKey;
         MaxTimestampAgeInSeconds = maxTimestampAgeInSeconds;
+    }
+
+    public void SetJsonSerializerOptions(JsonSerializerOptions options)
+    {
+        JsonSerializerOptions = options;
     }
 
     public void AddHandler<THandler>(EventType type)
