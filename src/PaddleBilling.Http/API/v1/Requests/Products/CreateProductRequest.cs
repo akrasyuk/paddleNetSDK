@@ -54,7 +54,7 @@ public class CreateProductRequest
             return this;
         }
 
-        public Builder WithCustomData(Dictionary<string, object> CustomData)
+        public Builder WithCustomData(Dictionary<string, object> customData)
         {
             _request.CustomData = customData;
             return this;

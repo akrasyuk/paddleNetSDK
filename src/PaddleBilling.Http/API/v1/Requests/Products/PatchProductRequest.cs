@@ -71,7 +71,7 @@ public class PatchProductRequest
             return this;
         }
 
-        public Builder SetCustomData(Dictionary<string, object> CustomData)
+        public Builder SetCustomData(Dictionary<string, object> customData)
         {
             _request.CustomData = customData;
             return this;
