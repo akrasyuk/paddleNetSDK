@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using PaddleBilling.Models.API.v1.Resources;
 using PaddleBilling.Models.API.v1.Resources.BillingAndSubscriptions;
 using PaddleBilling.Models.API.v1.Resources.Customers;
@@ -16,6 +17,11 @@ namespace PaddleBilling.Models.Json.Aot;
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(int))]
 [JsonSerializable(typeof(int?))]
+
+// This one is for cases where type is object and we don't know the exact type.
+// For some cases we may add a custom converter to handle the conversion.
+// But adding JsonElement as a fallback will prevent the serialization from failing for unknown types.
+[JsonSerializable(typeof(JsonElement))]
 #endregion
 #region Shared
 [JsonSerializable(typeof(Entity))]
