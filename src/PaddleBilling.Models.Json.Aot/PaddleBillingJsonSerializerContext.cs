@@ -1,11 +1,9 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using PaddleBilling.Models.API.v1.Resources;
 using PaddleBilling.Models.API.v1.Resources.BillingAndSubscriptions;
 using PaddleBilling.Models.API.v1.Resources.Customers;
 using PaddleBilling.Models.API.v1.Resources.Enums;
 using PaddleBilling.Models.API.v1.Resources.ProductCatalog;
-using PaddleBilling.Models.Json.Converters;
 
 namespace PaddleBilling.Models.Json.Aot;
 
@@ -102,17 +100,20 @@ namespace PaddleBilling.Models.Json.Aot;
 [JsonSerializable(typeof(List<TransactionItem>))]
 [JsonSerializable(typeof(Transaction))]
 #endregion
-[JsonSourceGenerationOptions(
-    WriteIndented = true, 
-    PropertyNameCaseInsensitive = true,
-    PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower,
-    Converters = [
-        typeof(ItemTypeConverter), 
-        typeof(NullableItemTypeConverter),
-        typeof(TaxCategoryConverter),
-        typeof(NullableTaxCategoryConverter),
-    ]
-    )]
+
+//For some reason this doesn't work with AWS Lambda .NET8 AOT.
+
+//[JsonSourceGenerationOptions(
+//    WriteIndented = true, 
+//    PropertyNameCaseInsensitive = true,
+//    PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower,
+//    Converters = [
+//        typeof(ItemTypeConverter), 
+//        typeof(NullableItemTypeConverter),
+//        typeof(TaxCategoryConverter),
+//        typeof(NullableTaxCategoryConverter),
+//    ]
+//    )]
 public partial class PaddleBillingJsonSerializerContext : JsonSerializerContext
 {
 }
