@@ -22,7 +22,7 @@ public class CreateProductRequest
 
     public Uri ImageUrl { get; private set; }
 
-    public Dictionary<string, string> CustomData { get; private set; }
+    public Dictionary<string, object> CustomData { get; private set; }
 
     public class Builder
     {
@@ -54,7 +54,7 @@ public class CreateProductRequest
             return this;
         }
 
-        public Builder WithCustomData(Dictionary<string, string> customData)
+        public Builder WithCustomData(Dictionary<string, object> CustomData)
         {
             _request.CustomData = customData;
             return this;

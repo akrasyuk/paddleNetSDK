@@ -21,7 +21,7 @@ public class Subscription : Entity
     public DateTimeOffset? FirstBilledAt { get; set; }
     public BillingPeriod CurrentBillingPeriod { get; set; }
     public ImportMeta ImportMeta { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public ScheduledChange ScheduledChange { get; set; }
 }
 
@@ -52,7 +52,7 @@ public class PriceDetails
     public string ProductId { get; set; }
     public UnitPrice UnitPrice { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public string Description { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public TrialPeriod TrialPeriod { get; set; }
@@ -68,7 +68,7 @@ public class ProductDetails
     public string TaxCategory { get; set; }
     public string Description { get; set; }
     public string ImageUrl { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public string Status { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public DateTimeOffset CreatedAt { get; set; }

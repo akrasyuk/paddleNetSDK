@@ -27,7 +27,7 @@ public class PatchProductRequest
 
     [JsonPropertyName("custom_data")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, string> CustomData { get; private set; }
+    public Dictionary<string, object> CustomData { get; private set; }
 
     [JsonPropertyName("status")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -71,7 +71,7 @@ public class PatchProductRequest
             return this;
         }
 
-        public Builder SetCustomData(Dictionary<string, string> customData)
+        public Builder SetCustomData(Dictionary<string, object> CustomData)
         {
             _request.CustomData = customData;
             return this;

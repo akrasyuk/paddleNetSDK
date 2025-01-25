@@ -6,7 +6,7 @@ public class Customer : Entity
     public string Email { get; set; }
     public string Locale { get; set; }
     public string Status { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public bool MarketingConsent { get; set; }
 }

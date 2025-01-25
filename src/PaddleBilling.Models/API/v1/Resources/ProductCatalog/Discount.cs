@@ -8,7 +8,7 @@ public class Discount : Entity
     public string Amount { get; set; }
     public string Status { get; set; }
     public DateTimeOffset? ExpiresAt { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public string Description { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public List<string> RestrictTo { get; set; }

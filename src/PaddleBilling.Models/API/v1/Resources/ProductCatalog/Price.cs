@@ -9,7 +9,7 @@ public class Price : Entity
     public string TaxMode { get; set; }
     public string ProductId { get; set; }
     public UnitPrice UnitPrice { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public string Description { get; set; }
     public ImportMeta ImportMeta { get; set; }
     public TrialPeriod TrialPeriod { get; set; }

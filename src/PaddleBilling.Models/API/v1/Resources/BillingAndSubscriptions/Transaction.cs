@@ -8,7 +8,7 @@ public class Transaction : Entity
     public string CustomerId { get; set; }
     public string AddressId { get; set; }
     public string BusinessId { get; set; }
-    public Dictionary<string, string> CustomData { get; set; }
+    public Dictionary<string, object> CustomData { get; set; }
     public string CurrencyCode { get; set; }
     public string Origin { get; set; }
     public string SubscriptionId { get; set; }
