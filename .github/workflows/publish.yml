@@ -47,7 +47,7 @@ jobs:
             echo "Publishing $projectName..."
             for nupkg in "$outputPath"/*.nupkg; do
               if [ -f "$nupkg" ]; then
-                dotnet nuget push "$nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+                dotnet nuget push "$nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
                 echo "Published $nupkg!"
               fi
             done
