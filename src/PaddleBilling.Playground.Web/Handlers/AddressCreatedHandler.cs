@@ -1,5 +1,5 @@
-﻿using PaddleBilling.Core.API.v1.Resources.Customers;
-using PaddleBilling.Core.API.v1.Resources.NotificationsAndEvents;
+﻿using PaddleBilling.Models.API.v1.Resources.Customers;
+using PaddleBilling.Models.API.v1.Resources.NotificationsAndEvents;
 using PaddleBilling.Webhooks.Interfaces;
 
 namespace PaddleBilling.Playground.Web.Handlers;

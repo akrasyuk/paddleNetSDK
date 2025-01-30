@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using PaddleBilling.Utils;
 using PaddleBilling.Webhooks.Configuration;
 using PaddleBilling.Webhooks.Middleware;
-using PaddleBilling.Webhooks.Services;
 
 namespace PaddleBilling.Webhooks.Extensions;
 
